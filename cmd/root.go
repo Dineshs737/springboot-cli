@@ -8,6 +8,7 @@ import (
 var (
 	version = "dev"
 	printer = ui.NewPrinter()
+	banner  = ui.NewBannerPrinter()
 )
 
 // SetVersion sets the version string (injected from main).
@@ -20,9 +21,9 @@ var rootCmd = &cobra.Command{
 	Short: "Spring Boot CLI — Create and manage Spring Boot projects from the terminal",
 	Long: `SpringCLI is a production-grade CLI tool that lets developers
 create and manage Spring Boot projects from the terminal,
-similar to how npm manages Node.js projects.`,
+like create-next-app but for Spring Boot.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		printer.Banner(version)
+		banner.Print(version)
 		cmd.Help()
 	},
 }
