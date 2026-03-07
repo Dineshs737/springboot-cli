@@ -267,9 +267,19 @@ func extractZip(reader *zip.Reader, destDir string) error {
 		fpath := filepath.Join(destDir, cleanName)
 
 		// Security check: prevent path traversal (ZipSlip vulnerability).
-		if !strings.HasPrefix(filepath.Clean(fpath), filepath.Clean(destDir)+string(os.PathSeparator)) {
+		absDestDir, err := filepath.Abs(destDir)
+		if err != nil {
+			return fmt.Errorf("resolving absolute path for destination: %w", err)
+		}
+
+		absFpath, err := filepath.Abs(fpath)
+		if err != nil {
+			return fmt.Errorf("resolving absolute path for extracted file: %w", err)
+		}
+
+		if !strings.HasPrefix(absFpath, absDestDir+string(os.PathSeparator)) {
 			// Allow exact match of destDir itself (if a folder matching the root is in the zip)
-			if filepath.Clean(fpath) != filepath.Clean(destDir) {
+			if absFpath != absDestDir {
 				return fmt.Errorf("illegal file path in ZIP: %s", file.Name)
 			}
 		}
