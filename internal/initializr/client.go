@@ -233,9 +233,63 @@ func (c *HTTPClient) ListAllDependencies(ctx context.Context) ([]DependencyCateg
 	return meta.Dependencies.Values, nil
 }
 
+// knownDependencyCoords maps Spring Initializr dependency IDs to their correct
+// Maven coordinates for dependencies that do NOT follow the standard
+// "org.springframework.boot:spring-boot-starter-<id>" naming convention.
+var knownDependencyCoords = map[string]struct {
+	GroupID    string
+	ArtifactID string
+}{
+	// Databases
+	"mysql":      {"com.mysql", "mysql-connector-j"},
+	"postgresql": {"org.postgresql", "postgresql"},
+	"h2":         {"com.h2database", "h2"},
+	"mariadb":    {"org.mariadb.jdbc", "mariadb-java-client"},
+	"sqlserver":  {"com.microsoft.sqlserver", "mssql-jdbc"},
+	"oracle":     {"com.oracle.database.jdbc", "ojdbc11"},
+
+	// Developer tools & utilities
+	"lombok":                  {"org.projectlombok", "lombok"},
+	"devtools":                {"org.springframework.boot", "spring-boot-devtools"},
+	"configuration-processor": {"org.springframework.boot", "spring-boot-configuration-processor"},
+	"docker-compose":          {"org.springframework.boot", "spring-boot-docker-compose"},
+
+	// Observability
+	"prometheus": {"io.micrometer", "micrometer-registry-prometheus"},
+
+	// Testing
+	"testcontainers": {"org.testcontainers", "testcontainers"},
+
+	// Messaging
+	"kafka": {"org.springframework.kafka", "spring-kafka"},
+	"amqp":  {"org.springframework.boot", "spring-boot-starter-amqp"},
+
+	// Caching & NoSQL
+	"data-redis":         {"org.springframework.boot", "spring-boot-starter-data-redis"},
+	"data-mongodb":       {"org.springframework.boot", "spring-boot-starter-data-mongodb"},
+	"data-elasticsearch": {"org.springframework.boot", "spring-boot-starter-data-elasticsearch"},
+
+	// Security
+	"oauth2-client":          {"org.springframework.boot", "spring-boot-starter-oauth2-client"},
+	"oauth2-resource-server": {"org.springframework.boot", "spring-boot-starter-oauth2-resource-server"},
+
+	// Misc
+	"flyway":     {"org.flywaydb", "flyway-core"},
+	"liquibase":  {"org.liquibase", "liquibase-core"},
+	"validation": {"org.springframework.boot", "spring-boot-starter-validation"},
+	"mail":       {"org.springframework.boot", "spring-boot-starter-mail"},
+	"websocket":  {"org.springframework.boot", "spring-boot-starter-websocket"},
+	"graphql":    {"org.springframework.boot", "spring-boot-starter-graphql"},
+	"batch":      {"org.springframework.boot", "spring-boot-starter-batch"},
+	"quartz":     {"org.springframework.boot", "spring-boot-starter-quartz"},
+}
+
 func resolveGroupID(dep Dependency) string {
 	if dep.GroupID != "" {
 		return dep.GroupID
+	}
+	if coords, ok := knownDependencyCoords[strings.ToLower(dep.ID)]; ok {
+		return coords.GroupID
 	}
 	return "org.springframework.boot"
 }
@@ -243,6 +297,9 @@ func resolveGroupID(dep Dependency) string {
 func resolveArtifactID(dep Dependency) string {
 	if dep.ArtifactID != "" {
 		return dep.ArtifactID
+	}
+	if coords, ok := knownDependencyCoords[strings.ToLower(dep.ID)]; ok {
+		return coords.ArtifactID
 	}
 	return "spring-boot-starter-" + dep.ID
 }

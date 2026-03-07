@@ -64,25 +64,50 @@ func RunWizard(projectNameArg string, client initializr.Client) (*WizardResult, 
 		GenerateDocker: true,
 	}
 
-	// Step 1-5: Project info text inputs.
-	projectInfo := struct {
-		ProjectName string `survey:"projectName"`
-		GroupID     string `survey:"groupID"`
-		ArtifactID  string `survey:"artifactID"`
-		Description string `survey:"description"`
-		PackageName string `survey:"packageName"`
-	}{}
-
-	questions := BuildProjectInfoQuestions(projectNameArg)
-	if err := survey.Ask(questions, &projectInfo); err != nil {
-		return nil, fmt.Errorf("project info prompt: %w", err)
+	// Step 1: Project Name
+	if err := survey.AskOne(&survey.Input{
+		Message: "Project name:",
+		Default: projectNameArg,
+	}, &result.ProjectName, survey.WithValidator(ValidateProjectName)); err != nil {
+		return nil, fmt.Errorf("project name prompt: %w", err)
 	}
 
-	result.ProjectName = projectInfo.ProjectName
-	result.GroupID = projectInfo.GroupID
-	result.ArtifactID = projectInfo.ArtifactID
-	result.Description = projectInfo.Description
-	result.PackageName = projectInfo.PackageName
+	// Step 2: Group ID
+	if err := survey.AskOne(&survey.Input{
+		Message: "Group ID:",
+		Default: "com.example",
+	}, &result.GroupID, survey.WithValidator(ValidateGroupID)); err != nil {
+		return nil, fmt.Errorf("group id prompt: %w", err)
+	}
+
+	// Step 3: Artifact ID
+	defaultArtifact := result.ProjectName
+	if defaultArtifact == "" {
+		defaultArtifact = "demo"
+	}
+	if err := survey.AskOne(&survey.Input{
+		Message: "Artifact ID:",
+		Default: defaultArtifact,
+	}, &result.ArtifactID, survey.WithValidator(ValidateArtifactID)); err != nil {
+		return nil, fmt.Errorf("artifact id prompt: %w", err)
+	}
+
+	// Step 4: Description
+	if err := survey.AskOne(&survey.Input{
+		Message: "Project description:",
+		Default: "My awesome Spring Boot app",
+	}, &result.Description, survey.WithValidator(ValidateNotEmpty)); err != nil {
+		return nil, fmt.Errorf("description prompt: %w", err)
+	}
+
+	// Step 5: Package Name
+	defaultPackage := DerivePackageName(result.GroupID, result.ArtifactID)
+	if err := survey.AskOne(&survey.Input{
+		Message: "Package name:",
+		Default: defaultPackage,
+	}, &result.PackageName, survey.WithValidator(ValidatePackageName)); err != nil {
+		return nil, fmt.Errorf("package name prompt: %w", err)
+	}
 
 	// Step 6: Build tool.
 	var buildTool string
@@ -118,7 +143,7 @@ func RunWizard(projectNameArg string, client initializr.Client) (*WizardResult, 
 	printer.StopSpinner(spinner, "Dependency catalog loaded!")
 	if err != nil {
 		printer.Warn("Could not fetch boot versions, using defaults")
-		result.BootVersion = "3.2.3"
+		result.BootVersion = "3.5.0"
 	} else {
 		var bootVersion string
 		if err := survey.AskOne(bootQ, &bootVersion); err != nil {
@@ -172,7 +197,7 @@ func FromNonInteractive(cfg NonInteractiveConfig) *WizardResult {
 	}
 	bootVersion := cfg.BootVersion
 	if bootVersion == "" {
-		bootVersion = "3.2.3"
+		bootVersion = "3.5.0"
 	}
 	javaVersion := cfg.JavaVersion
 	if javaVersion == "" {
