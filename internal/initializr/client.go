@@ -262,11 +262,13 @@ func mapBuildType(t string) string {
 
 func extractZip(reader *zip.Reader, destDir string) error {
 	for _, file := range reader.File {
-		fpath := filepath.Join(destDir, file.Name)
+		// ZIP files always use forward slashes. Standardize them to the OS separator.
+		cleanName := filepath.FromSlash(file.Name)
+		fpath := filepath.Join(destDir, cleanName)
 
-		// Security check: prevent path traversal.
+		// Security check: prevent path traversal (ZipSlip vulnerability).
 		if !strings.HasPrefix(filepath.Clean(fpath), filepath.Clean(destDir)+string(os.PathSeparator)) {
-			// Allow exact match of destDir itself.
+			// Allow exact match of destDir itself (if a folder matching the root is in the zip)
 			if filepath.Clean(fpath) != filepath.Clean(destDir) {
 				return fmt.Errorf("illegal file path in ZIP: %s", file.Name)
 			}
