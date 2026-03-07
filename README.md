@@ -111,7 +111,16 @@ It asks you if you want Basic HTTP, JWT (Stateless), or OAuth2, downloads the co
 
 Grab the executable native binary for your architecture. SpringCLI has zero external dependencies (does not require JVM or Docker to run). 
 
-### Linux / macOS
+### Linux / macOS (Automated Script)
+The easiest way to install on UNIX systems is using the installation script. It will automatically detect your OS and architecture, download the latest release, and move it to `/usr/local/bin`.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Dineshs737/springboot-cli/main/install.sh | bash
+```
+
+<details>
+<summary>Manual Installation (Linux/macOS)</summary>
+
 ```bash
 # macOS (Apple Silicon M1/M2/M3)
 curl -Lo springcli https://github.com/Dineshs737/springboot-cli/releases/latest/download/springcli-darwin-arm64
@@ -128,6 +137,7 @@ curl -Lo springcli https://github.com/Dineshs737/springboot-cli/releases/latest/
 chmod +x springcli
 sudo mv springcli /usr/local/bin/
 ```
+</details>
 
 ### Windows (PowerShell)
 ```powershell
