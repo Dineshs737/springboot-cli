@@ -192,26 +192,18 @@ func runNew(cmd *cobra.Command, args []string) error {
 	fmt.Println()
 
 	switch result.BuildTool {
-	case "maven":
-		printer.Dim("    ./mvnw spring-boot:run      Start the development server")
-		printer.Dim("    ./mvnw test                 Run your tests")
-		printer.Dim("    ./mvnw clean package        Build for production")
-	case "gradle", "gradle-kotlin":
-		printer.Dim("    ./gradlew bootRun           Start the development server")
-		printer.Dim("    ./gradlew test              Run your tests")
-		printer.Dim("    ./gradlew clean build       Build for production")
+	case "maven", "gradle", "gradle-kotlin":
+		printer.Dim("    springcli start             Start the development server")
+		printer.Dim("    springcli dev               Start with 'dev' profile & live-reload")
+		printer.Dim("    springcli test              Run your tests")
+		printer.Dim("    springcli package           Build executable JAR/WAR for production")
 	}
 
 	fmt.Println()
 	printer.Info("Get started by typing:")
 	fmt.Println()
 	printer.Dim("    cd %s", result.ProjectName)
-	switch result.BuildTool {
-	case "maven":
-		printer.Dim("    ./mvnw spring-boot:run")
-	case "gradle", "gradle-kotlin":
-		printer.Dim("    ./gradlew bootRun")
-	}
+	printer.Dim("    springcli dev")
 
 	fmt.Println()
 	printer.Success("Happy coding! 🌱")

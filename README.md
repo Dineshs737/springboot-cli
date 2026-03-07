@@ -44,7 +44,7 @@ It will launch a beautiful interactive wizard guiding you through Java vs Kotlin
 Once built, you can run right away:
 ```bash
 cd my-awesome-api
-./mvnw spring-boot:run
+springcli dev
 ```
 
 ---
@@ -69,7 +69,33 @@ Unlike the website, SpringCLI goes three steps further locally after the downloa
 
 *(If you ever want to skip the wizard and fully script the creation in bash, check the [CI/CD instructions below](#-advanced-usage-cicd)).*
 
-### 2. Managing Dependencies (The `npm` of Java)
+### 2. **App Lifecycle (One unified command layer)**
+Forget whether the project uses Maven or Gradle. Leave `./mvnw` or `./gradlew` behind.
+
+```bash
+# Start your application natively
+springcli start
+springcli start --port 8081
+
+# Start in dev mode (activates the 'dev' profile and passes properties automatically)
+springcli dev 
+springcli dev --debug
+
+# Build and package
+springcli package                # Skips tests by default
+springcli package --skip-tests=false
+
+# Test with extreme precision
+springcli test
+springcli test --class MyServiceTest --verbose
+
+# Cleanup and view info
+springcli clean                  # Removes build artifacts
+springcli deps                   # Shows complete dependency tree
+springcli info                   # Displays metadata (Java version, Boot version, Build tool)
+```
+
+### 3. Managing Dependencies (The `npm` for Java)
 Have you ever forgotten exactly what `groupId:artifactId` was required for Spring Kafka? Stop searching Maven Central.
 
 Use `springcli add` to resolve artifacts naturally:
