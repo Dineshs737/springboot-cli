@@ -16,15 +16,15 @@ const (
 
 // ProjectConfig holds the configuration for creating a new Spring Boot project.
 type ProjectConfig struct {
-	Name        string
-	GroupID     string
-	ArtifactID  string
-	Description string
-	Language    string
-	BuildType   string
-	BootVersion string
-	JavaVersion string
-	Packaging   string
+	Name         string
+	GroupID      string
+	ArtifactID   string
+	Description  string
+	Language     string
+	BuildType    string
+	BootVersion  string
+	JavaVersion  string
+	Packaging    string
 	Dependencies []string
 }
 

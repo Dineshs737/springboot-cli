@@ -2,17 +2,17 @@ package initializr
 
 // MetadataResponse represents the top-level response from the Spring Initializr metadata endpoint.
 type MetadataResponse struct {
-	Dependencies  DependencyGroup   `json:"dependencies"`
-	Type          ValueGroup        `json:"type"`
-	Packaging     ValueGroup        `json:"packaging"`
-	JavaVersion   ValueGroup        `json:"javaVersion"`
-	Language      ValueGroup        `json:"language"`
-	BootVersion   ValueGroup        `json:"bootVersion"`
+	Dependencies DependencyGroup `json:"dependencies"`
+	Type         ValueGroup      `json:"type"`
+	Packaging    ValueGroup      `json:"packaging"`
+	JavaVersion  ValueGroup      `json:"javaVersion"`
+	Language     ValueGroup      `json:"language"`
+	BootVersion  ValueGroup      `json:"bootVersion"`
 }
 
 // DependencyGroup holds dependency categories.
 type DependencyGroup struct {
-	Type   string              `json:"type"`
+	Type   string               `json:"type"`
 	Values []DependencyCategory `json:"values"`
 }
 

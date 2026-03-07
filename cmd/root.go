@@ -24,7 +24,7 @@ create and manage Spring Boot projects from the terminal,
 like create-next-app but for Spring Boot.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		banner.Print(version)
-		cmd.Help()
+		_ = cmd.Help()
 	},
 }
 

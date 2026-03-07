@@ -155,8 +155,9 @@ func (p *Printer) Table(headers []string, rows [][]string) {
 // StartSpinner creates and starts a terminal spinner with the given message.
 func (p *Printer) StartSpinner(msg string) *spinner.Spinner {
 	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
-	s.Suffix = " " + msg
-	s.Color("cyan")
+	s.Suffix = " " + color.New(color.Faint).Sprint(msg)
+	s.Writer = p.out
+	_ = s.Color("green")
 	s.Start()
 	return s
 }

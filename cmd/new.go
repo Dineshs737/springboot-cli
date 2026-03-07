@@ -23,19 +23,19 @@ All options can also be provided via flags for non-interactive usage (CI/CD).`,
 }
 
 var (
-	newGroup          string
-	newArtifact       string
-	newDescription    string
-	newLanguage       string
-	newType           string
-	newBoot           string
-	newJava           string
-	newPackaging      string
-	newDeps           string
-	newGit            bool
-	newDocker         bool
-	newEnv            bool
-	newNoInteractive  bool
+	newGroup         string
+	newArtifact      string
+	newDescription   string
+	newLanguage      string
+	newType          string
+	newBoot          string
+	newJava          string
+	newPackaging     string
+	newDeps          string
+	newGit           bool
+	newDocker        bool
+	newEnv           bool
+	newNoInteractive bool
 )
 
 func init() {

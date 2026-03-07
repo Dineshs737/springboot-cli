@@ -27,18 +27,18 @@ func TestFromNonInteractiveDefaults(t *testing.T) {
 
 func TestFromNonInteractiveExplicitValues(t *testing.T) {
 	cfg := NonInteractiveConfig{
-		ProjectName:  "shop-api",
-		GroupID:      "com.acme",
-		ArtifactID:   "shop-service",
-		Description:  "Shop backend",
-		Language:     "kotlin",
-		BuildType:    "gradle-kotlin",
-		BootVersion:  "3.3.0",
-		JavaVersion:  "21",
-		Packaging:    "jar",
-		Dependencies: []string{"web", "jpa", "security"},
-		InitGit:      true,
-		GenerateEnv:  false,
+		ProjectName:    "shop-api",
+		GroupID:        "com.acme",
+		ArtifactID:     "shop-service",
+		Description:    "Shop backend",
+		Language:       "kotlin",
+		BuildType:      "gradle-kotlin",
+		BootVersion:    "3.3.0",
+		JavaVersion:    "21",
+		Packaging:      "jar",
+		Dependencies:   []string{"web", "jpa", "security"},
+		InitGit:        true,
+		GenerateEnv:    false,
 		GenerateDocker: true,
 	}
 

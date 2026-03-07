@@ -15,36 +15,36 @@ import (
 
 // WizardResult holds all answers collected from the interactive wizard.
 type WizardResult struct {
-	ProjectName  string
-	GroupID      string
-	ArtifactID   string
-	Description  string
-	PackageName  string
-	BuildTool    string // "maven", "gradle", "gradle-kotlin"
-	Language     string // "java", "kotlin", "groovy"
-	JavaVersion  string // "17", "21"
-	Packaging    string // "jar", "war"
-	BootVersion  string // e.g. "3.3.0"
-	Dependencies []string
-	InitGit      bool
-	GenerateEnv  bool
+	ProjectName    string
+	GroupID        string
+	ArtifactID     string
+	Description    string
+	PackageName    string
+	BuildTool      string // "maven", "gradle", "gradle-kotlin"
+	Language       string // "java", "kotlin", "groovy"
+	JavaVersion    string // "17", "21"
+	Packaging      string // "jar", "war"
+	BootVersion    string // e.g. "3.3.0"
+	Dependencies   []string
+	InitGit        bool
+	GenerateEnv    bool
 	GenerateDocker bool
 }
 
 // NonInteractiveConfig holds flag values for non-interactive mode.
 type NonInteractiveConfig struct {
-	ProjectName  string
-	GroupID      string
-	ArtifactID   string
-	Description  string
-	Language     string
-	BuildType    string
-	BootVersion  string
-	JavaVersion  string
-	Packaging    string
-	Dependencies []string
-	InitGit      bool
-	GenerateEnv  bool
+	ProjectName    string
+	GroupID        string
+	ArtifactID     string
+	Description    string
+	Language       string
+	BuildType      string
+	BootVersion    string
+	JavaVersion    string
+	Packaging      string
+	Dependencies   []string
+	InitGit        bool
+	GenerateEnv    bool
 	GenerateDocker bool
 }
 
