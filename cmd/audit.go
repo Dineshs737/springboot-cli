@@ -39,13 +39,11 @@ func init() {
 
 // OSV Query Data structures
 type osvQuery struct {
-	Query struct {
-		Package struct {
-			Name      string `json:"name"`
-			Ecosystem string `json:"ecosystem"`
-		} `json:"package"`
-		Version string `json:"version"`
-	} `json:"query"`
+	Package struct {
+		Name      string `json:"name"`
+		Ecosystem string `json:"ecosystem"`
+	} `json:"package"`
+	Version string `json:"version"`
 }
 
 type osvBatchQuery struct {
@@ -107,9 +105,9 @@ func runAudit(cmd *cobra.Command, args []string) error {
 	batch := osvBatchQuery{}
 	for _, dep := range deps {
 		q := osvQuery{}
-		q.Query.Package.Ecosystem = "Maven"
-		q.Query.Package.Name = dep.OSVPkgName
-		q.Query.Version = dep.Version
+		q.Package.Ecosystem = "Maven"
+		q.Package.Name = dep.OSVPkgName
+		q.Version = dep.Version
 		batch.Queries = append(batch.Queries, q)
 	}
 
