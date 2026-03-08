@@ -94,7 +94,7 @@ func writeFile(path, content string) error {
 // generateJavaSecurityConfig creates a Java SecurityConfig source file.
 func generateJavaSecurityConfig(basePackage string) string {
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("package %s.security;\n\n", basePackage))
+	fmt.Fprintf(&sb, "package %s.security;\n\n", basePackage)
 	sb.WriteString("import org.springframework.context.annotation.Bean;\n")
 	sb.WriteString("import org.springframework.context.annotation.Configuration;\n")
 	sb.WriteString("import org.springframework.security.config.annotation.web.builders.HttpSecurity;\n")
@@ -144,7 +144,7 @@ func generateJavaSecurityConfig(basePackage string) string {
 // generateKotlinSecurityConfig creates a Kotlin SecurityConfig source file.
 func generateKotlinSecurityConfig(basePackage string) string {
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("package %s.security\n\n", basePackage))
+	fmt.Fprintf(&sb, "package %s.security\n\n", basePackage)
 	sb.WriteString("import org.springframework.context.annotation.Bean\n")
 	sb.WriteString("import org.springframework.context.annotation.Configuration\n")
 	sb.WriteString("import org.springframework.security.config.annotation.web.builders.HttpSecurity\n")

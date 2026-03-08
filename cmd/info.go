@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+
 	"github.com/springcli/springcli/internal/gradle"
 	"github.com/springcli/springcli/internal/maven"
 	"github.com/springcli/springcli/internal/project"
@@ -45,7 +46,8 @@ func runInfo() error {
 	var group string
 	var artifact string
 
-	if buildType == project.BuildTypeMaven {
+	switch buildType {
+	case project.BuildTypeMaven:
 		mp := maven.NewParser()
 		doc, err := mp.ReadPom(buildPath)
 		if err != nil {
@@ -82,8 +84,7 @@ func runInfo() error {
 
 		deps, _ := mp.ListDependencies(buildPath)
 		depsCount = len(deps)
-
-	} else if buildType == project.BuildTypeGradleGroovy || buildType == project.BuildTypeGradleKotlin {
+	case project.BuildTypeGradleGroovy, project.BuildTypeGradleKotlin:
 		content, err := os.ReadFile(buildPath)
 		if err != nil {
 			return err

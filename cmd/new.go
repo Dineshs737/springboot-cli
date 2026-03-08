@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+
 	"github.com/springcli/springcli/internal/initializr"
 	"github.com/springcli/springcli/internal/project"
 	"github.com/springcli/springcli/internal/wizard"

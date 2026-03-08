@@ -95,14 +95,14 @@ func newMockServer(t *testing.T, callCount *atomic.Int32) *httptest.Server {
 	require.NoError(t, err)
 
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		switch {
-		case r.URL.Path == "/metadata/client":
+		switch r.URL.Path {
+		case "/metadata/client":
 			if callCount != nil {
 				callCount.Add(1)
 			}
 			w.Header().Set("Content-Type", "application/json")
 			w.Write(metaJSON)
-		case r.URL.Path == "/starter.zip":
+		case "/starter.zip":
 			w.Header().Set("Content-Type", "application/zip")
 			writeTestZip(t, w)
 		default:

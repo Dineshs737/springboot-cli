@@ -158,7 +158,7 @@ func (g *Generator) generateDockerfile(dir, buildTool, javaVersion string) error
 
 	if buildTool == "maven" {
 		sb.WriteString("# Build stage\n")
-		sb.WriteString(fmt.Sprintf("FROM eclipse-temurin:%s AS builder\n", jdkTag))
+		fmt.Fprintf(&sb, "FROM eclipse-temurin:%s AS builder\n", jdkTag)
 		sb.WriteString("WORKDIR /app\n")
 		sb.WriteString("COPY .mvn/ .mvn/\n")
 		sb.WriteString("COPY mvnw pom.xml ./\n")
@@ -167,14 +167,14 @@ func (g *Generator) generateDockerfile(dir, buildTool, javaVersion string) error
 		sb.WriteString("RUN ./mvnw clean package -DskipTests -q\n")
 		sb.WriteString("\n")
 		sb.WriteString("# Runtime stage\n")
-		sb.WriteString(fmt.Sprintf("FROM eclipse-temurin:%s\n", jreTag))
+		fmt.Fprintf(&sb, "FROM eclipse-temurin:%s\n", jreTag)
 		sb.WriteString("WORKDIR /app\n")
 		sb.WriteString("COPY --from=builder /app/target/*.jar app.jar\n")
 		sb.WriteString("EXPOSE 8080\n")
 		sb.WriteString("ENTRYPOINT [\"java\", \"-jar\", \"app.jar\"]\n")
 	} else {
 		sb.WriteString("# Build stage\n")
-		sb.WriteString(fmt.Sprintf("FROM eclipse-temurin:%s AS builder\n", jdkTag))
+		fmt.Fprintf(&sb, "FROM eclipse-temurin:%s AS builder\n", jdkTag)
 		sb.WriteString("WORKDIR /app\n")
 		sb.WriteString("COPY gradle/ gradle/\n")
 		sb.WriteString("COPY gradlew build.gradle* settings.gradle* ./\n")
@@ -183,7 +183,7 @@ func (g *Generator) generateDockerfile(dir, buildTool, javaVersion string) error
 		sb.WriteString("RUN ./gradlew clean bootJar --no-daemon -q\n")
 		sb.WriteString("\n")
 		sb.WriteString("# Runtime stage\n")
-		sb.WriteString(fmt.Sprintf("FROM eclipse-temurin:%s\n", jreTag))
+		fmt.Fprintf(&sb, "FROM eclipse-temurin:%s\n", jreTag)
 		sb.WriteString("WORKDIR /app\n")
 		sb.WriteString("COPY --from=builder /app/build/libs/*.jar app.jar\n")
 		sb.WriteString("EXPOSE 8080\n")
@@ -237,7 +237,7 @@ func (g *Generator) generateDockerCompose(dir string, deps []string) error {
 	if len(dependsOn) > 0 {
 		sb.WriteString("    depends_on:\n")
 		for _, d := range dependsOn {
-			sb.WriteString(fmt.Sprintf("      - %s\n", d))
+			fmt.Fprintf(&sb, "      - %s\n", d)
 		}
 	}
 	sb.WriteString("\n")
@@ -322,7 +322,7 @@ func (g *Generator) generateDockerCompose(dir string, deps []string) error {
 	if len(volumes) > 0 {
 		sb.WriteString("volumes:\n")
 		for _, v := range volumes {
-			sb.WriteString(fmt.Sprintf("  %s:\n", v))
+			fmt.Fprintf(&sb, "  %s:\n", v)
 		}
 	}
 

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+
 	"github.com/springcli/springcli/internal/gradle"
 	"github.com/springcli/springcli/internal/maven"
 	"github.com/springcli/springcli/internal/project"

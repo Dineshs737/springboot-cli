@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
+
 	"github.com/springcli/springcli/internal/initializr"
 )
 
