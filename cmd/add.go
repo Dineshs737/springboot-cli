@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/spf13/cobra"
 
@@ -42,19 +43,33 @@ func runAdd(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
 
 	for _, depID := range args {
-		resolved, err := client.ResolveDependency(ctx, depID)
+		// Parse optional @version suffix
+		var explicitVersion string
+		rawDepID := depID
+		if parts := strings.SplitN(depID, "@", 2); len(parts) == 2 {
+			rawDepID = parts[0]
+			explicitVersion = parts[1]
+		}
+
+		resolved, err := client.ResolveDependency(ctx, rawDepID)
 		if err != nil {
 			// Try fuzzy search for suggestions.
-			suggestions, searchErr := client.SearchDependencies(ctx, depID)
+			suggestions, searchErr := client.SearchDependencies(ctx, rawDepID)
 			if searchErr == nil && len(suggestions) > 0 {
-				printer.Error("Dependency '%s' not found. Did you mean:", depID)
+				printer.Error("Dependency '%s' not found. Did you mean:", rawDepID)
 				for _, s := range suggestions {
 					printer.Dim("  - %s (%s)", s.ID, s.Name)
 				}
 			} else {
-				printer.Error("Dependency '%s' not found", depID)
+				printer.Error("Dependency '%s' not found", rawDepID)
 			}
 			continue
+		}
+
+		if explicitVersion != "" {
+			resolved.Version = explicitVersion
+			// If an explicit version is specified, it's not managed exclusively by the Spring Boot bom
+			resolved.Starter = false
 		}
 
 		added, addErr := addDependencyToProject(buildPath, buildType, resolved)
