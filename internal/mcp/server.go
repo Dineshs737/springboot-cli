@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -101,7 +102,7 @@ func executeCLI(args ...string) (string, error) {
 
 	// We append an internal flag (if necessary in the future) to disable colors.
 	// We'll rely on NO_COLOR env var which many CLI libraries respect.
-	cmd := os.Command(execPath, args...)
+	cmd := exec.Command(execPath, args...)
 	cmd.Env = append(os.Environ(), "NO_COLOR=1")
 
 	out, err := cmd.CombinedOutput()
@@ -114,13 +115,14 @@ func executeCLI(args ...string) (string, error) {
 }
 
 func (s *Server) handleCreateProject(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	name, _ := request.Params.Arguments["name"].(string)
-	group, _ := request.Params.Arguments["group"].(string)
-	artifact, _ := request.Params.Arguments["artifact"].(string)
-	javaVer, _ := request.Params.Arguments["java_version"].(string)
-	lang, _ := request.Params.Arguments["language"].(string)
-	build, _ := request.Params.Arguments["build"].(string)
-	deps, _ := request.Params.Arguments["dependencies"].(string)
+	argsMap, _ := request.Params.Arguments.(map[string]interface{})
+	name, _ := argsMap["name"].(string)
+	group, _ := argsMap["group"].(string)
+	artifact, _ := argsMap["artifact"].(string)
+	javaVer, _ := argsMap["java_version"].(string)
+	lang, _ := argsMap["language"].(string)
+	build, _ := argsMap["build"].(string)
+	deps, _ := argsMap["dependencies"].(string)
 
 	args := []string{"new", name, "--no-interactive"}
 	if group != "" {
@@ -147,30 +149,34 @@ func (s *Server) handleCreateProject(ctx context.Context, request mcp.CallToolRe
 }
 
 func (s *Server) handleRunDoctor(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	dir, _ := request.Params.Arguments["dir"].(string)
+	argsMap, _ := request.Params.Arguments.(map[string]interface{})
+	dir, _ := argsMap["dir"].(string)
 	output, _ := executeCLI("doctor", "--dir", dir)
 	return mcp.NewToolResultText(fmt.Sprintf("```\n%s\n```", output)), nil
 }
 
 func (s *Server) handleAddDependency(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	dir, _ := request.Params.Arguments["dir"].(string)
-	dep, _ := request.Params.Arguments["dependency"].(string)
+	argsMap, _ := request.Params.Arguments.(map[string]interface{})
+	dir, _ := argsMap["dir"].(string)
+	dep, _ := argsMap["dependency"].(string)
 	output, _ := executeCLI("add", dep, "--dir", dir)
 	return mcp.NewToolResultText(fmt.Sprintf("```\n%s\n```", output)), nil
 }
 
 func (s *Server) handleGenerateComponent(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	dir, _ := request.Params.Arguments["dir"].(string)
-	compType, _ := request.Params.Arguments["type"].(string)
-	name, _ := request.Params.Arguments["name"].(string)
+	argsMap, _ := request.Params.Arguments.(map[string]interface{})
+	dir, _ := argsMap["dir"].(string)
+	compType, _ := argsMap["type"].(string)
+	name, _ := argsMap["name"].(string)
 
 	output, _ := executeCLI("generate", compType, name, "--dir", dir)
 	return mcp.NewToolResultText(fmt.Sprintf("```\n%s\n```", output)), nil
 }
 
 func (s *Server) handleAuditDependencies(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	dir, _ := request.Params.Arguments["dir"].(string)
-	update, ok := request.Params.Arguments["update"].(bool)
+	argsMap, _ := request.Params.Arguments.(map[string]interface{})
+	dir, _ := argsMap["dir"].(string)
+	update, ok := argsMap["update"].(bool)
 
 	args := []string{"audit", "--dir", dir}
 	if ok && update {

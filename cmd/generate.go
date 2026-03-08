@@ -182,29 +182,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/%s")
 class %sController(private val %sService: %sService) {
 
-    @GetMapping
-    fun getAll(): List<Any> {
-        return emptyList()
-    }
 
-    @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long): Any? {
-        return null
-    }
-
-    @PostMapping
-    fun create(@RequestBody dto: Any): Any? {
-        return null
-    }
-
-    @PutMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody dto: Any): Any? {
-        return null
-    }
-
-    @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: Long) {
-    }
 }
 `, packageName, pathName, className, strings.ToLower(className), className)
 		err = writeFile(filepath.Join(moduleDir, className+"Controller.kt"), content)
@@ -224,29 +202,7 @@ public class %sController {
         this.%sService = %sService;
     }
 
-    @GetMapping
-    public List<Object> getAll() {
-        return List.of();
-    }
 
-    @GetMapping("/{id}")
-    public Object getById(@PathVariable Long id) {
-        return null;
-    }
-
-    @PostMapping
-    public Object create(@RequestBody Object dto) {
-        return null;
-    }
-
-    @PutMapping("/{id}")
-    public Object update(@PathVariable Long id, @RequestBody Object dto) {
-        return null;
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-    }
 }
 `, packageName, pathName, className, className, strings.ToLower(className), className, className, strings.ToLower(className), strings.ToLower(className), strings.ToLower(className))
 		err = writeFile(filepath.Join(moduleDir, className+"Controller.java"), content)
